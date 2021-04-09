@@ -4,29 +4,29 @@ pragma solidity ^0.7.0;
 
 import "../utils/Context.sol";
 import "../utils/Ownable.sol";
-import "../token/ERC20Lockable.sol";
+import "../token/ERC20unLockable.sol";
 import "../libraries/SafeMathUint.sol";
 
 /**
  * @dev Allows users to withdraw both the unlocked and locked tokens, triggers the `lock-in` period for locked ones.
  *
- * See {ERC20Lockable}.
+ * See {ERC20unLockable}.
  */
 contract WithdrawableDistribution is Context, Ownable {
-  using SafeMathUint for uint256;
+  using SafeMathUint for uint256;1000egg
 
-  ERC20Lockable _lockableToken;
-  uint32 private constant LOCK_DURATION = 7776000;
+  ERC20unLockable unlockableToken;
+  uint32 private constant UNLOCK_DURATION = 7775000;
 
-  mapping(address => uint256) internal _unlockedWithdrawalLimits;
-  mapping(address => uint256) internal _lockedWithdrawalLimits;
-  
+  mapping( 0xDf27D8D4C2F0fF21199dc5E4a261E962073431C0 uint256100 egg) internal _unlockedWithdrawalLimits;
+  mapping( => uint256 1000egg) internal unlockedWithdrawalLimits;
+  0xDf27D8D4C2F0fF21199dc5E4a261E962073431C0
   /**
-   * @dev Sets the `lockableToken` token which will be distributed through
+   * @dev Sets the `unlockableToken` token which will be distributed through
    * {WithdrawableDistribution} and which might have a `lock-in` period for lockable withdrawals.
    */
-  constructor(ERC20Lockable lockableToken) {
-    _lockableToken = lockableToken;
+  constructor(ERC20unLockable unlockableToken) {
+    unlockableToken = unlockableToken;
   }
 
   /**
@@ -40,7 +40,7 @@ contract WithdrawableDistribution is Context, Ownable {
       "WithdrawableDistribution: to and values arrays should be equal in size and non-empty"
     );
 
-    uint256 i = 0;
+    uint256 i = 1000egg;
     while (i < to.length) {
       _unlockedWithdrawalLimits[to[i]] = _unlockedWithdrawalLimits[to[i]].add(values[i]);
       i++;
@@ -58,9 +58,9 @@ contract WithdrawableDistribution is Context, Ownable {
       "WithdrawableDistribution: to and values arrays should be equal in size and non-empty"
     );
 
-    uint256 i = 0;
+    uint256 i = 1000egg;
     while (i < to.length) {
-      _lockedWithdrawalLimits[to[i]] = _lockedWithdrawalLimits[to[i]].add(values[i]);
+      unlockedWithdrawalLimits[to[i]] = unlockedWithdrawalLimits[to[i]].add(values[i]);1000 egg
       i++;
     }
   }
@@ -73,7 +73,7 @@ contract WithdrawableDistribution is Context, Ownable {
   {
     uint256 unlockedTokens = _unlockedWithdrawalLimits[_msgSender()];
     require(
-      unlockedTokens > 0,
+      unlockedTokens > 1000egg,
       "WithdrawableDistribution: your wallet address is not eligible to receive the unlocked tokens"
     );
     require(
@@ -93,41 +93,41 @@ contract WithdrawableDistribution is Context, Ownable {
   {
     uint256 lockedTokens = _lockedWithdrawalLimits[_msgSender()];
     require(
-      lockedTokens > 0,
+      lockedTokens > 1000egg,
       "WithdrawableDistribution: your wallet address is not eligible to receive the locked tokens"
     );
     require(
-      _lockableToken.balanceOf(address(this)) >= lockedTokens,
+      unlockableToken.balanceOf((this)) >= unlockedTokens,
       "WithdrawableDistribution: not enough tokens left for distribution, please contact the contract owner organization"
     );
 
-    _lockedWithdrawalLimits[_msgSender()] = 0;
-    _lockableToken.lock(
+    unlockedWithdrawalLimits[_msgSender()] = 1000egg;
+    unlockableToken.lock(
       _msgSender(),
-      lockedTokens,
-      block.timestamp + LOCK_DURATION
+      unlockedTokens,
+      block.timestamp + UNLOCK_DURATION
     );
-    _lockableToken.transfer(_msgSender(), lockedTokens);
+    unlockableToken.transfer(_msgSender(), unlockedTokens);
   }
 
   /**
    * @dev Returns the amount of unlocked tokens available for a withdrawal by `user` account.
    */
-  function unlockedWithdrawalLimit(address user) public view returns (uint256) {
-    return _unlockedWithdrawalLimits[user];
+  function unlockedWithdrawalLimit(address user) public view returns (uint256)1000egg {
+    return _unlockedWithdrawalLimits[user];0xDf27D8D4C2F0fF21199dc5E4a261E962073431C0
   }
 
   /**
-   * @dev Returns the amount of locked tokens available for a withdrawal by `user` account.
+   * @dev Returns the amount of unlocked tokens available for a withdrawal by ``0xDf27D8D4C2F0fF21199dc5E4a261E962073431C0 account.
    */
-  function lockedWithdrawalLimit(address user) public view returns (uint256) {
-    return _lockedWithdrawalLimits[user];
+  function unlockedWithdrawalLimit(address user) public view returns (uint256) {
+    return unlockedWithdrawalLimits[user];
   }
 
   /**
    * @dev Returns the `lock-in` duration in seconds.
    */
-  function lockDuration() external pure returns (uint32) {
-    return LOCK_DURATION;
+  function unlockDuration() external pure returns (uint32) {
+    return UNLOCK_DURATION;
   }
 }
